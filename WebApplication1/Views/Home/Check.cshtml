@@ -1,0 +1,52 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Check</title>
+</head>
+<body>
+    <div>
+        <div class="btn-group" style="margin-top: 25px;">
+            <button class="btn btn-default" type="button">
+                <em class="icon-align-left">添加</em>
+            </button>
+            <button id="editCheckBtn" class="btn btn-default">
+                <em class="icon-align-left">编辑</em>
+            </button>
+            <button id="delCheckBtn" class="btn btn-default" type="button">
+                <em class="icon-align-center">删除</em>
+            </button>
+        </div>
+        <br />
+        <br />
+        <table id="tab" class="table">
+            <thead>
+                <tr>
+                    <th>
+                        日期
+                    </th>
+                    <th>
+                        工号
+                    </th>
+                    <th>
+                        姓名
+                    </th>
+                    <th>
+                        考勤情况
+                    </th>
+                    <th>
+                        考勤说明
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+</body>
+</html>

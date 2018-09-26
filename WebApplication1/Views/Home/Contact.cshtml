@@ -1,0 +1,430 @@
+﻿@{
+    ViewBag.Title = "教职工管理系统";
+}
+<html>
+<head>
+    <style>
+        .nav > li {
+            position: relative;
+            display: block;
+            text-align: -webkit-center;
+        }
+
+        .container-fluid {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        body {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .titlefull {
+            height: 80px;
+            background-color: cornflowerblue;
+            color: #fff;
+            display: flex;
+        }
+        .title {
+            font-style: oblique;
+            font-size: 30px;
+            margin-left: 10px;
+        }
+
+        .topDiv {
+            height: 80px;
+        }
+
+        .bottomDiv {
+            height: calc(100% - 80px);
+        }
+
+        .menuDiv {
+            height: 100%;
+            background-color: aliceblue;
+        }
+
+
+        .pager {
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            border: 1px solid #dddddd;
+            border-radius: 3px;
+            display: inline-block;
+            clear: both;
+        }
+
+            .pager a, .pager span {
+                font-size: 14px;
+                color: #428bca;
+                border-right: 1px solid #dddddd;
+                padding: 4px 9px;
+                float: left;
+                text-decoration: none;
+            }
+
+            .pager span {
+                color: #fff;
+                background: #428bca;
+            }
+
+            .pager a:hover {
+                color: #2a6496;
+                background: #f2f2f2;
+            }
+
+            .pager a.last {
+                border-right: 0;
+            }
+    </style>
+</head>
+<body>
+    <div style="width: 100%;height:100%;position: absolute;">
+        <div class="topDiv">
+            <div class="col-sm-10 titlefull">
+                <img src="~/Image/logo.png" style="height: 50px;margin-top: 13px;" />
+                <h3 class="title">
+                    教职工管理系统
+                </h3>
+            </div>
+            <div class="col-sm-1 titlefull" style="justify-content: center;">
+                <img src="~/Image/user.png" style="height: 30px;margin-top: 26px;" />
+                <div id="user" style="line-height: 80px;margin-left: 10px;"></div>
+            </div>
+            <div class="col-sm-1 titlefull">
+                <div id="back" style="line-height: 80px;margin-left: 10px;cursor: pointer;">退出</div>
+            </div>
+        </div>
+        <div class="bottomDiv">
+            <div class="col-sm-2 menuDiv">
+                <ul class="nav nav-list tabs" style="margin-top: 40px;">
+                    <li class="active">
+                        <a href="#tab1">人事管理</a>
+                    </li>
+                    <li id="page2">
+                        <a href="#tab2">考勤管理</a>
+                    </li>
+                    <li id="page3">
+                        <a href="#tab3">课程管理</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="tab_container">
+                <div id="tab1" class="col-sm-10 tab_content">
+                    <div class="btn-group" style="margin-top: 25px;">
+                        <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">
+                            <em class="icon-align-left">添加</em>
+                        </button>
+                        <button id="editBtn" class="btn btn-default" type="button" data-toggle="modal" data-target="#editModal">
+                            <em class="icon-align-left">编辑</em>
+                        </button>
+                        <button id="delBtn" class="btn btn-default" type="button"><em class="icon-align-center">删除</em></button>
+                    </div>
+                    <br />
+                    <br />
+                    <div style="height: 224px;">
+                        <table id="tab" class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">
+                                        
+                                    </th>
+                                    <th>
+                                        工号
+                                    </th>
+                                    <th>
+                                        姓名
+                                    </th>
+                                    <th>
+                                        年龄
+                                    </th>
+                                    <th>
+                                        职位
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <!--分页-->
+                    <div style="text-align:-webkit-right">
+                        <div id="pager" class="pager"></div>
+                    </div>
+
+                    <!--添加角色模态框-->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div style="width: 400px;" class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times</button>
+                                    <h4 class="modal-title" id="myModalLabel">添加员工</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <label for="firstname" class="col-md-2 control-label">工号</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="jobNum" placeholder="请输入工号">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastname" class="col-md-2 control-label">姓名</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="jobName" placeholder="请输入姓名">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="firstname" class="col-md-2 control-label">年龄</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" onkeyup='checkInt(this)' id="jobAge" placeholder="请输入年龄">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastname" class="col-md-2 control-label">职位</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="job" placeholder="请输入职位">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="addBtn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--编辑角色模态框-->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div style="width: 400px;" class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times</button>
+                                    <h4 class="modal-title" id="myModalLabel">编辑员工</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <label for="lastname" class="col-md-2 control-label">姓名</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="upJobName" placeholder="请输入姓名">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="firstname" class="col-md-2 control-label">年龄</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="upJobAge" onkeyup='checkInt(this)' placeholder="请输入年龄">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastname" class="col-md-2 control-label">职位</label>
+                                            <div class="col-md-10">
+                                                <input type="text" class="form-control" id="upJob" placeholder="请输入职位">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="updateBtn" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="tab2" class="col-sm-10 tab_content">
+
+                </div>
+                <div id="tab3" class="col-sm-10 tab_content">
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script>
+    
+    function pager (page, total, callback) {
+        var html = '';
+        html += '<a class="first" href="javascript:;">首页</a>';
+        html += '<a class="first" href="javascript:;">上一页</a>';
+        var start = page - 5 < 0 ? 0 : page - 5;
+        var end = page + 5 < total ? page + 5 : total;
+        for (var i = start; i < end; i++) {
+            html += i == page - 1 ? '<span>' + (i + 1) + '</span>' : '<a href="javascript:;">' + (i + 1) + '</a>';
+        }
+        html += '<a class="first" href="javascript:;">下一页</a>';
+        html += '<a class="last" href="javascript:;">末页</a>';
+        $("#pager").html(html).find('a').click(function () {
+            var p = $(this).text();
+            if (p == '上一页') p = page == 1 ? 1 : page - 1;
+            if (p == '下一页') p = page == total ? total : page + 1;
+            if (p == '首页') p = 1;
+            if (p == '末页') p = total;
+
+            if (p != page) callback(parseInt(p));
+        });
+    }
+    var total;
+    onload = function () {
+        getAllData(0, 5);
+    }
+    function go(p) {
+        $("#pager").append(pager(p, total, go));
+        getAllData(p - 1, 5);
+    }
+
+    function getAllData(pageNo, pageSize) {
+        var s;
+        $.ajax({
+            url: "UserList",
+            data: { pageNo: pageNo, pageSize: pageSize},
+            success: function (data) {
+                $("#user").html(data.name);
+                $("#tab tr:gt(0)").remove();
+                for (var i = 0; i < data.UserList.length; i++) {
+                    s = "<tr onclick='select(this)'><td><input type='checkbox'/></td><td>" + data.UserList[i].ID + "</td><td>" + data.UserList[i].Name + "</td><td>" + data.UserList[i].Age + "</td><td>" + data.UserList[i].Job + "</td></tr>";
+                    $("#tab").append(s);
+                    $("#pager").append(pager(pageNo + 1, data.pageTotal, go)); 
+                }
+            }
+        });
+    }
+
+
+    $("#page2").click(function () {
+        $('#tab2').load('Check');
+    });
+
+    $("#page3").click(function () {
+        $('#tab3').load('Course');
+    });
+
+    $("#back").click(function () {
+        window.location = "Index";
+    });
+
+    //正整数
+    function checkInt(e) {
+        var re = new RegExp("^[0-9]*[1-9][0-9]*$");
+        if (e.value != "") {
+            if (!re.test(e.value)) {
+                e.value = "";
+                e.focus();
+            }
+        }
+    }
+
+    var selectPreId; //选择的点击的数据
+    var selectData; //选中的数据
+    function select(item) {
+        $("#tbody").find('tr').attr("style", "backgroundColor");
+        $("#tbody").find('tr').eq(item.rowIndex - 1).css({ "backgroundColor": "beige" });
+        selectPreId = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td').eq(0)[0].innerText;
+        selectData = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td');
+    }
+
+    $("#delBtn").click(function () {
+        if (selectPreId != null) {
+            var msg = "您确定要删除这条数据吗？"
+            if (confirm(msg) == true) {
+                $.ajax({
+                    url: "DelectPreson",
+                    data: { id:selectPreId},
+                    success: function (data) {
+                        alert("删除成功！");
+                        window.location.reload();
+                    }
+                });
+            }
+        } else
+            alert("请选择要删除的数据！")
+    });
+    
+    $("#addBtn").click(function () {
+        var jobNum = $("#jobNum").val();
+        var jobName = $("#jobName").val();
+        var jobAge = $("#jobAge").val();
+        var job = $("#job").val();
+        
+        if (jobNum != null && jobNum != "")
+        {
+            $.ajax({
+                url: "InsertPerson",
+                data: { jobNum: jobNum, jobName: jobName, jobAge: jobAge, job: job },
+                success: function (data) {
+                    alert("保存成功！");
+                    window.location.reload();
+                }
+            });
+        } else
+            alert("请输入工号！")
+    });
+
+    $("#editBtn").click(function ()
+    {
+        if (selectPreId != null) {
+            $("#upJobName").attr("value", selectData[1].innerText); 
+            $("#upJobAge").attr("value", selectData[2].innerText);
+            $("#upJob").attr("value", selectData[3].innerText);
+        } else
+        {
+            alert("请选择要编辑的数据！");
+            //$('#editModal').modal('hide');
+            //window.location.reload();
+        }
+    });
+
+    $("#updateBtn").click(function ()
+    {
+        var id = selectPreId;
+        var name = $("#upJobName").val();
+        var age = $("#upJobAge").val();
+        var job = $("#upJob").val();
+        if (id != null) {
+            $.ajax({
+                url: "UpdatePreson",
+                data: { id: id, name: name, age: age, job: job },
+                success: function (data) {
+                    alert("保存成功！");
+                    //onblur(alert("保存成功！"); this.focus());
+                    window.location.reload();
+                }
+            });
+        }
+    });
+
+
+    $(document).ready(function () {
+        //默认active 
+        $(".tab_content").hide(); //隐藏全部的tab菜单内容
+        $("ul.tabs li:first").addClass("active").show(); //对第一个li标签添加class="active属性" 
+        $(".tab_content:first").show(); //显示第一个tab内容 
+
+        //点击事件 
+        $("ul.tabs li").click(function () {
+            $("ul.tabs li").removeClass("active"); //移除class="active"属性
+            $(this).addClass("active"); //添加class="active"到选择标签中 
+            $(".tab_content").hide(); //隐藏全部标签内容 
+            var activeTab = $(this).find("a").attr("href"); //找到所属属性值来识别活跃选项卡和内容 
+            $(activeTab).fadeIn(); //使内容消失 
+            return false;
+        });
+
+    });
+    
+</script>
