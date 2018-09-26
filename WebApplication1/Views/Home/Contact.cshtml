@@ -334,25 +334,33 @@
     function select(item) {
         $("#tbody").find('tr').attr("style", "backgroundColor");
         $("#tbody").find('tr').eq(item.rowIndex - 1).css({ "backgroundColor": "beige" });
-        selectPreId = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td').eq(0)[0].innerText;
+        selectPreId = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td').eq(1)[0].innerText;
         selectData = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td');
     }
 
     $("#delBtn").click(function () {
-        if (selectPreId != null) {
-            var msg = "您确定要删除这条数据吗？"
-            if (confirm(msg) == true) {
-                $.ajax({
-                    url: "DelectPreson",
-                    data: { id:selectPreId},
-                    success: function (data) {
-                        alert("删除成功！");
-                        window.location.reload();
-                    }
-                });
-            }
-        } else
-            alert("请选择要删除的数据！")
+        //if (selectPreId != null) {
+        //    var msg = "您确定要删除这条数据吗？"
+        //    if (confirm(msg) == true) {
+        //        $.ajax({
+        //            url: "DelectPreson",
+        //            data: { id:selectPreId},
+        //            success: function (data) {
+        //                alert("删除成功！");
+        //                window.location.reload();
+        //            }
+        //        });
+        //    }
+        //} else
+        //    alert("请选择要删除的数据！")
+
+        var ck = $("input[type=checkbox]:checked");
+        if (ck.length > 1) {
+            var list;
+            $.each(ck, function (index, item) {
+                list.push(item.)
+            });
+        }
     });
     
     $("#addBtn").click(function () {
@@ -378,9 +386,9 @@
     $("#editBtn").click(function ()
     {
         if (selectPreId != null) {
-            $("#upJobName").attr("value", selectData[1].innerText); 
-            $("#upJobAge").attr("value", selectData[2].innerText);
-            $("#upJob").attr("value", selectData[3].innerText);
+            $("#upJobName").attr("value", selectData[2].innerText); 
+            $("#upJobAge").attr("value", selectData[3].innerText);
+            $("#upJob").attr("value", selectData[4].innerText);
         } else
         {
             alert("请选择要编辑的数据！");
