@@ -9,44 +9,163 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Check</title>
+    <style>
+        .searchDiv {
+            display: block;
+            padding-top: 30px;
+        }
+
+        .form-search input {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+
+        input.search-query {
+            padding-right: 14px;
+            padding-right: 4px \9;
+            padding-left: 14px;
+            padding-left: 4px \9;
+            margin-bottom: 0;
+            height: 32px;
+        }
+    </style>
 </head>
 <body>
     <div>
-        <div class="btn-group" style="margin-top: 25px;">
-            <button class="btn btn-default" type="button">
-                <em class="icon-align-left">添加</em>
-            </button>
-            <button id="editCheckBtn" class="btn btn-default">
-                <em class="icon-align-left">编辑</em>
-            </button>
-            <button id="delCheckBtn" class="btn btn-default" type="button">
-                <em class="icon-align-center">删除</em>
-            </button>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="col-sm-12 searchDiv">
+                    <form class="form-search">
+                        <input id="checkText" class="input-medium search-query" type="text" placeholder="输入身份证号或者姓名"/> 
+                           <button type="button" id="checkBtn1" onclick="search()" class="btn">查找</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <br />
-        <br />
-        <table id="tab" class="table">
-            <thead>
-                <tr>
-                    <th>
-                        日期
-                    </th>
-                    <th>
-                        工号
-                    </th>
-                    <th>
-                        姓名
-                    </th>
-                    <th>
-                        考勤情况
-                    </th>
-                    <th>
-                        考勤说明
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-        </table>
+        <br/>
+        <br/>
+        <div style="height: 310px;">
+            <table id="tabCheck" class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            身份证号
+                        </th>
+                        <th>
+                            姓名
+                        </th>
+                        <th>
+                            性别
+                        </th>
+                        <th>
+                            民族
+                        </th>
+                        <th>
+                            出生年月
+                        </th>
+                        <th>
+                            住址
+                        </th>
+                        <th>
+                            签发机关
+                        </th>
+                        <th>
+                            初试日期
+                        </th>
+                        <th>
+                            截止日期
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyCheck"></tbody>
+            </table>
+        </div>
+        <!--分页-->
+        <div style="text-align:-webkit-right">
+            <div id="pagerCheck" class="pager"></div>
+        </div>
     </div>
 </body>
 </html>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    function pager(page, total, callback) {
+        var html = '';
+        html += '<a class="first" href="javascript:;">首页</a>';
+        html += '<a class="first" href="javascript:;">上一页</a>';
+        var start = page - 5 < 0 ? 0 : page - 5;
+        var end = page + 5 < total ? page + 5 : total;
+        for (var i = start; i < end; i++) {
+            html += i == page - 1 ? '<span>' + (i + 1) + '</span>' : '<a href="javascript:;">' + (i + 1) + '</a>';
+        }
+        html += '<a class="first" href="javascript:;">下一页</a>';
+        html += '<a class="last" href="javascript:;">末页</a>';
+        $("#pagerCheck").html(html).find('a').click(function () {
+            var p = $(this).text();
+            if (p == '上一页') p = page == 1 ? 1 : page - 1;
+            if (p == '下一页') p = page == total ? total : page + 1;
+            if (p == '首页') p = 1;
+            if (p == '末页') p = total;
+
+            if (p != page) callback(parseInt(p));
+        });
+    }
+    var textContext;
+    $(function () {
+        textContext = null;
+        queryData(0, 5, textContext);
+
+        $("#checkBtn1").click(function () {
+            textContext = $("#checkText").val();
+            queryData(0, 5, textContext);
+        });
+
+    });
+    var total;
+    function go(p) {
+        $("#pagerCheck").append(pager(p, total, go));
+        queryData(p - 1, 5, textContext);
+    }
+    var s;
+    function queryData(pageNo, pageSize, textContext) {
+        $.ajax({
+            url: "GetCheckData",
+            data: { pageNo: pageNo, pageSize: pageSize, textContext: textContext},
+            success: function (data) {
+                $("#tabCheck tr:gt(0)").remove();
+                for (var i = 0; i < data.checkData.length; i++) {
+                    s = "<tr onclick='select(this)'>" +
+                        "<td>" + data.checkData[i].Code + "</td>" +
+                        "<td>" + data.checkData[i].Name + "</td>" +
+                        "<td>" + data.checkData[i].Gender + "</td>" +
+                        "<td>" + data.checkData[i].Folk + "</td>" +
+                        "<td>" + data.checkData[i].BirthDay + "</td>" +
+                        "<td>" + data.checkData[i].Address + "</td>" +
+                        "<td>" + data.checkData[i].Agency + "</td>" +
+                        "<td>" + data.checkData[i].ExpireStart + "</td>" +
+                        "<td>" + data.checkData[i].ExpireEnd + "</td>" +
+                        "</tr> ";
+                    $("#tabCheck").append(s);
+                    $("#pagerCheck").append(pager(pageNo + 1, data.totalCount, go));
+                }
+            }
+        });
+    }
+
+    var selectPreId; //选择的点击的数据
+    var selectData; //选中的数据
+    function select(item) {
+        $("#tbodyCheck").find('tr').attr("style", "backgroundColor");
+        $("#tbodyCheck").find('tr').eq(item.rowIndex - 1).css({ "backgroundColor": "beige" });
+        selectPreId = $("#tbodyCheck").find('tr').eq(item.rowIndex - 1).find('td').eq(0)[0].innerText;
+        selectData = $("#tbodyCheck").find('tr').eq(item.rowIndex - 1).find('td');
+    }
+    
+</script>

@@ -149,5 +149,27 @@ namespace WebApplication1.Controllers
 			return Content("保存成功");
 		}
 
+		[HttpGet]
+		public ActionResult GetCheckData(int pageNo, int pageSize, string textContext)
+		{
+			CheckContext cc = new CheckContext();
+			IQueryable<CheckProject> IQuery = cc.CheckProject;
+
+			if (!string.IsNullOrWhiteSpace(textContext))
+				IQuery = IQuery.Where(t => t.Code.Contains(textContext.Trim()) || t.Name.Contains(textContext.Trim()));
+			double count = Math.Ceiling(Convert.ToDouble(IQuery.Count()) / 5);
+			List<CheckProject> check = IQuery.OrderBy(t => t.Code).Skip(pageNo * pageSize).Take(pageSize).ToList();
+
+			return Json(new { checkData = check, totalCount = count }, JsonRequestBehavior.AllowGet);
+		}
+
+		[HttpGet]
+		public ActionResult Menu()
+		{
+			MenuContext mc = new MenuContext();
+
+			List<MenuData> menu = mc.menuData.ToList();
+			return Json(new { menuData = menu }, JsonRequestBehavior.AllowGet);
+		}
 	}
 }

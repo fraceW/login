@@ -32,14 +32,17 @@
             font-style: oblique;
             font-size: 30px;
             margin-left: 10px;
+            line-height: 72px;
         }
 
         .topDiv {
             height: 80px;
+            display: flex;
         }
 
         .bottomDiv {
             height: calc(100% - 80px);
+            display: flex;
         }
 
         .menuDiv {
@@ -78,6 +81,11 @@
             .pager a.last {
                 border-right: 0;
             }
+
+        #menu .no {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -99,8 +107,11 @@
         </div>
         <div class="bottomDiv">
             <div class="col-sm-2 menuDiv">
-                <ul class="nav nav-list tabs" style="margin-top: 40px;">
-                    <li class="active">
+                <div id="menu" style="margin-top: 30px;">
+
+                </div>
+                @*<ul class="nav nav-list tabs" style="margin-top: 40px;display: block;">
+                    <li>
                         <a href="#tab1">人事管理</a>
                     </li>
                     <li id="page2">
@@ -109,10 +120,11 @@
                     <li id="page3">
                         <a href="#tab3">课程管理</a>
                     </li>
-                </ul>
+                </ul>*@
             </div>
-            <div id="tab_container">
-                <div id="tab1" class="col-sm-10 tab_content">
+
+            <div class="col-sm-10" id="tab_container">
+                <div id="tab1" class="tab_content">
                     <div class="btn-group" style="margin-top: 25px;">
                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">
                             <em class="icon-align-left">添加</em>
@@ -124,7 +136,7 @@
                     </div>
                     <br />
                     <br />
-                    <div style="height: 224px;">
+                    <div style="height: 310px;">
                         <table id="tab" class="table">
                             <thead>
                                 <tr>
@@ -239,7 +251,7 @@
                 </div>
 
                 <div id="tab2" class="col-sm-10 tab_content">
-
+                    
                 </div>
                 <div id="tab3" class="col-sm-10 tab_content">
                     
@@ -251,13 +263,63 @@
 </body>
 </html>
 
-<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
-<script src="~/Scripts/bootstrap.min.js"></script>
+@*<script src="~/Scripts/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>*@
 
 <script>
+    var menus = '';
+    $(function () {
+        $.ajax({
+            url: "Menu",
+            success: function (data) {
+                GetMenu(null, data.menuData);
+                $("#menu").append(menus);
+            }
+        });
+    });
+    var j = 0;
+    function GetMenu(id, data) {
+        
+        var childArry = GetParentArry(id, data);
+        if (childArry.length > 0) {
+            if (id == null)
+                menus += "<ul>";
+            else {
+                menus += "<ul class='no'>";
+            }
+            for (var i in childArry) {
+                menus += "<li onClick='ShowMenu(this)'><a href='javascript:void(0)'>" + childArry[i].Name + '</a>';
+                GetMenu(childArry[i].Code, data);
+                menus += '</li>';
+            }
+            menus += '</ul>';
+        }
+    }
     
+
+    function ShowMenu(obj) {
+        window.event ? window.event.cancelBubble = true : e.stopPropagation();
+
+        var HName = obj.parentNode.getElementsByTagName("ul");
+        for (var i = 0; i < HName.length; i++) {
+            HName[i].className = "no";
+        }
+        if (obj.childNodes[1]) 
+            obj.childNodes[1].className = "";
+    }
+
+
+    function GetParentArry(id, arry) {
+        var newArry = new Array();
+        for (var i in arry) {
+            if (arry[i].fatherId == id)
+                newArry.push(arry[i]);
+        }
+        return newArry;
+    }
+
     function pager (page, total, callback) {
         var html = '';
         html += '<a class="first" href="javascript:;">首页</a>';
@@ -280,6 +342,7 @@
         });
     }
     var total;
+
     onload = function () {
         getAllData(0, 5);
     }
@@ -334,33 +397,25 @@
     function select(item) {
         $("#tbody").find('tr').attr("style", "backgroundColor");
         $("#tbody").find('tr').eq(item.rowIndex - 1).css({ "backgroundColor": "beige" });
-        selectPreId = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td').eq(1)[0].innerText;
+        selectPreId = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td').eq(0)[0].innerText;
         selectData = $("#tbody").find('tr').eq(item.rowIndex - 1).find('td');
     }
 
     $("#delBtn").click(function () {
-        //if (selectPreId != null) {
-        //    var msg = "您确定要删除这条数据吗？"
-        //    if (confirm(msg) == true) {
-        //        $.ajax({
-        //            url: "DelectPreson",
-        //            data: { id:selectPreId},
-        //            success: function (data) {
-        //                alert("删除成功！");
-        //                window.location.reload();
-        //            }
-        //        });
-        //    }
-        //} else
-        //    alert("请选择要删除的数据！")
-
-        var ck = $("input[type=checkbox]:checked");
-        if (ck.length > 1) {
-            var list;
-            $.each(ck, function (index, item) {
-                list.push(item.)
-            });
-        }
+        if (selectPreId != null) {
+            var msg = "您确定要删除这条数据吗？"
+            if (confirm(msg) == true) {
+                $.ajax({
+                    url: "DelectPreson",
+                    data: { id:selectPreId},
+                    success: function (data) {
+                        alert("删除成功！");
+                        window.location.reload();
+                    }
+                });
+            }
+        } else
+            alert("请选择要删除的数据！")
     });
     
     $("#addBtn").click(function () {
@@ -386,9 +441,9 @@
     $("#editBtn").click(function ()
     {
         if (selectPreId != null) {
-            $("#upJobName").attr("value", selectData[2].innerText); 
-            $("#upJobAge").attr("value", selectData[3].innerText);
-            $("#upJob").attr("value", selectData[4].innerText);
+            $("#upJobName").attr("value", selectData[1].innerText); 
+            $("#upJobAge").attr("value", selectData[2].innerText);
+            $("#upJob").attr("value", selectData[3].innerText);
         } else
         {
             alert("请选择要编辑的数据！");

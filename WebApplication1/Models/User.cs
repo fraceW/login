@@ -67,4 +67,49 @@ namespace WebApplication1.Models
         public string firstname { get; set; }
         public string Password { get; set; }
     }
+
+
+	public class CheckContext : DbContext
+	{
+		public CheckContext() : base("BbsConnection")
+		{
+		}
+
+		public DbSet<CheckProject> CheckProject { get; set; }
+	}
+	[Table("checkData")]
+	public class CheckProject
+	{
+		[Key]
+		[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public string Gender { get; set; }
+		public string Folk { get; set; }
+		public string BirthDay { get; set; }
+		public string Address { get; set; }
+		public string Agency { get; set; }
+		public string ExpireStart { get; set; }
+		public string ExpireEnd { get; set; }
+	}
+
+	public class MenuContext : DbContext
+	{
+		public MenuContext() : base("BbsConnection") { }
+
+		public DbSet<MenuData> menuData { get; set; }
+	}
+
+	[Table("Memu")]
+	public class MenuData
+	{
+		[Key]
+		[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+
+		public string ID { get; set; }
+		public string Code { get; set; }
+		public string Name { get; set; }
+		public string fatherId { get; set; }
+		public int reback { get; set; }
+	}
 }
