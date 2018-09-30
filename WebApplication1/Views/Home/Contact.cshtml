@@ -175,7 +175,8 @@
     <div class="full">
         <div id="top">
             <div id="top_logo">
-                @*<img alt="logo" src="/images/common/logo.jpg" width="274" height="49" style="vertical-align:middle;">*@
+                <img alt="logo" src="/images/common/logo.jpg" width="60" height="49" style="vertical-align:middle;margin-top: 10px;">
+                <h3 style="color: #fff;margin-top: 14px;margin-left: 10px;">教职工管理系统</h3>
             </div>
             <div id="top_links">
                 <div id="top_op">
@@ -236,7 +237,6 @@
                                     <div class="list-group">
                                         <a id="menu1" href="#childPage1" class="list-group-item">人事信息</a>
                                         <a id="menu2" href="#childPage2" class="list-group-item">课程信息</a>
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -290,7 +290,7 @@
 
             <div class="right">
                 <div id="top_nav">
-                    <span id="here_area">当前位置：系统&nbsp;>&nbsp;系统介绍</span>
+                    <span id="here_area"></span>
                 </div>
 
                 <div id="main">
@@ -494,6 +494,7 @@
     //    return newArry;
     //}
 
+    
     function pager (page, total, callback) {
         var html = '';
         html += '<a class="first" href="javascript:;">首页</a>';
@@ -544,14 +545,17 @@
 
 
     $("#menu1").click(function () {
+        hintChage = $("#menu1").text();
         pageSwich(0);
     });
     $("#menu2").click(function () {
+        hintChage = $("#menu2").text();
         pageSwich(1);
         $('#childPage2').load('Course');
     });
 
     $("#menu3").click(function () {
+        hintChage = $("#menu3").text();
         pageSwich(2);
         $('#childPage3').load('Check');
     }); 
@@ -567,8 +571,11 @@
         }
         if (HName[index]) 
             HName[index].className = "";
+        $("#here_area").html(hint + hintChage);
     }
-
+    var hintChage = "人事信息";
+    var hint = "当前位置：系统&nbsp;>&nbsp;";
+    $("#here_area").html(hint + hintChage);
     
     //正整数
     function checkInt(e) {
